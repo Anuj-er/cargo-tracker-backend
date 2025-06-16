@@ -1,157 +1,90 @@
-<div align="center">
-  <img src="https://cdn-icons-png.flaticon.com/512/6295/6295417.png" alt="Shipment Tracker API" width="100" height="100">
-  <h1>Shipment Tracker - Backend API</h1>
-  <p>A robust Node.js API for tracking cargo shipments with MongoDB integration</p>
-  
-  <div>
-    <img src="https://img.shields.io/badge/Node.js-18.x-339933?style=for-the-badge&logo=node.js" alt="Node.js">
-    <img src="https://img.shields.io/badge/Express-4.18.2-000000?style=for-the-badge&logo=express" alt="Express">
-    <img src="https://img.shields.io/badge/MongoDB-8.15.2-47A248?style=for-the-badge&logo=mongodb" alt="MongoDB">
-  </div>
-</div>
+# Shipment Tracker - Backend API
 
-<hr>
+![GitHub](https://img.shields.io/github/license/Anuj-er/cargo-tracker-backend)
+![Node.js](https://img.shields.io/badge/node-18.x-green)
+![Express](https://img.shields.io/badge/express-4.x-blue)
+![MongoDB](https://img.shields.io/badge/mongodb-atlas-green)
+![Docker](https://img.shields.io/badge/docker-ready-brightgreen)
 
-## 📋 Table of Contents
+A robust Node.js API for tracking cargo shipments with MongoDB integration. Built as part of the MERN Stack Tracking Assignment.
 
-- [Overview](#overview)
-- [API Endpoints](#api-endpoints)
-- [Data Models](#data-models)
-- [Technologies](#technologies)
-- [Installation](#installation)
-- [Environment Variables](#environment-variables)
-- [Available Scripts](#available-scripts)
-- [Folder Structure](#folder-structure)
-- [Assumptions](#assumptions)
-- [Database Setup](#database-setup)
-- [Docker Setup](#docker-setup)
+## 🔗 Repository Links
+- Backend: [https://github.com/Anuj-er/cargo-tracker-backend](https://github.com/Anuj-er/cargo-tracker-backend)
+- Frontend: [https://github.com/Anuj-er/cargo-tracker-webapp](https://github.com/Anuj-er/cargo-tracker-webapp)
 
-<hr>
+## 📋 Assignment Fulfillment
 
-## 🔍 Overview
+This project implements a complete Cargo Shipment Tracker backend using Node.js, Express, and MongoDB as per the assignment requirements:
 
-This is the backend API for the Shipment Tracker application, built using Node.js, Express, and MongoDB. It provides a comprehensive set of endpoints for managing and tracking shipments, including creating new shipments, updating their locations, and calculating estimated arrival times.
-
-The API is designed to be robust, scalable, and easy to integrate with the frontend application or other services.
-
-<hr>
+### Backend Implementation
+- **API Endpoints**: All required endpoints for shipment tracking and management
+- **Data Modeling**: Comprehensive shipment model with all required fields
+- **Geospatial Support**: Location tracking with MongoDB geospatial features
+- **ETA Calculation**: Algorithms to determine estimated arrival times
+- **Docker Support**: Complete containerization for easy deployment
 
 ## 🔌 API Endpoints
 
-<div align="center">
-  <table>
-    <tr>`
-      <th>Method</th>
-      <th>Endpoint</th>
-      <th>Description</th>
-    </tr>
-    <tr>
-      <td><code>GET</code></td>
-      <td><code>/api/shipments</code></td>
-      <td>Retrieve all shipments with filtering and sorting options</td>
-    </tr>
-    <tr>
-      <td><code>GET</code></td>
-      <td><code>/api/shipments/:trackingNumber</code></td>
-      <td>Retrieve details of a specific shipment</td>
-    </tr>
-    <tr>
-      <td><code>POST</code></td>
-      <td><code>/api/shipments</code></td>
-      <td>Create a new shipment</td>
-    </tr>
-    <tr>
-      <td><code>PATCH</code></td>
-      <td><code>/api/shipments/:trackingNumber/location</code></td>
-      <td>Update the current location of a shipment</td>
-    </tr>
-    <tr>
-      <td><code>PATCH</code></td>
-      <td><code>/api/shipments/:trackingNumber/status</code></td>
-      <td>Update the status of a shipment</td>
-    </tr>
-    <tr>
-      <td><code>GET</code></td>
-      <td><code>/api/shipments/:trackingNumber/history</code></td>
-      <td>Retrieve the location history of a shipment</td>
-    </tr>
-    <tr>
-      <td><code>GET</code></td>
-      <td><code>/api/shipments/:trackingNumber/eta</code></td>
-      <td>Calculate and retrieve the ETA based on current location</td>
-    </tr>
-    <tr>
-      <td><code>GET</code></td>
-      <td><code>/api/shipments/nearby</code></td>
-      <td>Find shipments near a specific location</td>
-    </tr>
-    <tr>
-      <td><code>GET</code></td>
-      <td><code>/health</code></td>
-      <td>Health check endpoint</td>
-    </tr>
-  </table>
-</div>
+| Method | Endpoint                                | Description                                     |
+|--------|-----------------------------------------|-------------------------------------------------|
+| GET    | /api/shipments                          | Retrieve all shipments with details             |
+| GET    | /api/shipments/:id                      | Get specific shipment details                   |
+| POST   | /api/shipments/:id/update-location      | Update the current location of a shipment       |
+| GET    | /api/shipments/:id/eta                  | Get estimated arrival time                      |
+| POST   | /api/shipments                          | Create a new shipment with container ID         |
+| GET    | /api/shipments/:id/history              | Get shipment location history                   |
+| GET    | /health                                 | Health check endpoint                           |
 
-<hr>
+## 📊 Data Model
 
-## 📊 Data Models
-
-### Shipment Model
+### Shipment Schema
 
 ```javascript
 {
-  trackingNumber: String,            // Unique identifier
-  origin: {                          // Origin location
-    type: 'Point',
-    coordinates: [Number, Number],   // [longitude, latitude]
-    address: String,
-    timestamp: Date
-  },
-  destination: {                     // Destination location
+  shipmentId: String,            // Unique identifier
+  containerId: String,           // Container identifier
+  origin: {                      // Origin location
     type: 'Point',
     coordinates: [Number, Number],
     address: String,
     timestamp: Date
   },
-  currentLocation: {                 // Current location
+  destination: {                 // Destination location
     type: 'Point',
     coordinates: [Number, Number],
     address: String,
     timestamp: Date
   },
-  status: String,                    // pending, in_transit, out_for_delivery, delivered, exception
-  estimatedDelivery: Date,           // Estimated delivery date
-  customer: {                        // Customer information
-    name: String,
-    email: String,
-    phone: String
+  currentLocation: {             // Current location
+    type: 'Point',
+    coordinates: [Number, Number],
+    address: String,
+    timestamp: Date
   },
-  items: [{                          // Items in shipment
-    description: String,
-    quantity: Number,
-    weight: Number,
-    dimensions: {
-      length: Number,
-      width: Number,
-      height: Number
-    }
+  route: [{                      // Route waypoints
+    type: 'Point',
+    coordinates: [Number, Number],
+    address: String,
+    estimatedArrival: Date
   }],
-  history: [{                        // Location history
+  status: String,                // pending, in_transit, out_for_delivery, delivered, exception
+  currentEta: Date,              // Current estimated delivery date
+  history: [{                    // Location history
     location: {
       type: 'Point',
       coordinates: [Number, Number],
-      address: String,
-      timestamp: Date
+      address: String
     },
     status: String,
-    description: String,
     timestamp: Date
   }]
 }
 ```
 
-<hr>
+## 🚀 Live Demo
+
+- Backend API: [https://cargo-tracker-backend-jhy2.onrender.com](https://cargo-tracker-backend-jhy2.onrender.com)
+- Frontend: [https://shipmenttracker.vercel.app/](https://shipmenttracker.vercel.app/)
 
 ## 🛠️ Technologies
 
@@ -160,165 +93,157 @@ The API is designed to be robust, scalable, and easy to integrate with the front
 - **MongoDB** - NoSQL database
 - **Mongoose** - MongoDB object modeling
 - **Winston** - Logging
-- **Express Validator** - Request validation
 - **Helmet** - Security middleware
 - **Cors** - Cross-origin resource sharing
 
-<hr>
+## 🔧 Setup and Installation
 
-## 📥 Installation
+### Prerequisites
 
-Follow these steps to set up the backend API:
+- [Node.js](https://nodejs.org/) (v14 or later)
+- [Docker](https://www.docker.com/get-started) and [Docker Compose](https://docs.docker.com/compose/install/) (optional, for containerized deployment)
+- [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) account or local MongoDB installation
+
+### Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+
+```
+NODE_ENV=development
+PORT=5000
+MONGO_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/shipment-tracker?retryWrites=true&w=majority
+```
+
+### Installation Options
+
+#### Standard Setup
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/tracker-backend.git
+git clone https://github.com/Anuj-er/cargo-tracker-backend.git
 
 # Navigate to the project directory
-cd tracker-backend
+cd cargo-tracker-backend
 
 # Install dependencies
 npm install
-
-# Set up environment variables (see Environment Variables section)
-cp .env.example .env
-# Edit .env with your configuration
 
 # Start the development server
 npm run dev
 ```
 
-The API will be available at [http://localhost:5000](http://localhost:5000)
+The API will be available at http://localhost:5000
 
-<hr>
+#### Docker Setup (Recommended)
 
-## 🔐 Environment Variables
+```bash
+# Clone the repository
+git clone https://github.com/Anuj-er/cargo-tracker-backend.git
 
-Create a `.env` file in the root directory with the following variables:
+# Navigate to the project directory
+cd cargo-tracker-backend
+
+# Create .env file with required environment variables
+echo "NODE_ENV=development" > .env
+echo "PORT=5000" >> .env
+echo "MONGO_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/shipment-tracker?retryWrites=true&w=majority" >> .env
+
+# Make the deploy script executable
+chmod +x docker-deploy.sh
+
+# Run the deployment script
+./docker-deploy.sh
+```
+
+The API will be available at http://localhost:5000
+
+## 📁 Project Structure
 
 ```
-# Server configuration
-PORT=5000
-NODE_ENV=development
-
-# MongoDB connection string
-MONGO_URI=mongodb+srv://<username>:<password>@<cluster-address>/<database-name>
-
-# Optional: JWT secret (if implementing authentication)
-# JWT_SECRET=your_jwt_secret_here
-
-# Optional: Logging level
-# LOG_LEVEL=info
-```
-
-<hr>
-
-## 📜 Available Scripts
-
-In the project directory, you can run:
-
-- `npm start` - Starts the server in production mode
-- `npm run dev` - Starts the server with nodemon for development
-- `npm test` - Runs the test suite
-- `npm run lint` - Runs ESLint to check code quality
-
-<hr>
-
-## 📁 Folder Structure
-
-```
-tracker-backend/
+cargo-tracker-backend/
 ├── src/
 │   ├── config/                # Configuration files
-│   │   ├── config.js          # Environment variables
 │   │   └── database.js        # Database connection
-│   ├── controllers/           # Request handlers
 │   │   └── shipment.controller.js
 │   ├── middleware/            # Custom middleware
-│   │   ├── auth.middleware.js
 │   │   └── error.middleware.js
 │   ├── models/                # Database models
 │   │   └── shipment.model.js
 │   ├── routes/                # API routes
 │   │   └── shipment.routes.js
 │   ├── utils/                 # Utility functions
-│   │   └── logger.js
+│   │   └── location.utils.js
 │   └── server.js              # Entry point
 ├── .env                       # Environment variables
-├── .gitignore                 # Git ignore file
-├── package.json               # Dependencies and scripts
-└── README.md                  # This file
+├── docker-compose.yml         # Docker Compose configuration
+├── Dockerfile                 # Docker configuration
+└── package.json               # Dependencies and scripts
 ```
 
-<hr>
+## 🐳 Docker Commands
 
-## 🤔 Assumptions
-
-- MongoDB Atlas is used as the database service
-- The API will be consumed primarily by the React frontend application
-- Geospatial queries are supported by the MongoDB instance
-- Authentication and authorization will be implemented in a future version
-- The API will be deployed to a Node.js-compatible hosting environment
-- Error logging is important for debugging and monitoring
-- The application might need to scale horizontally in the future
-
-<hr>
-
-## 💾 Database Setup
-
-This API uses MongoDB for data storage. You can use MongoDB Atlas (cloud) or a local MongoDB instance.
-
-### MongoDB Atlas Setup
-
-1. Create a free account at [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
-2. Create a new cluster
-3. Create a database user with read/write permissions
-4. Get your connection string from the "Connect" button
-5. Add your connection string to the `.env` file
-
-### Local MongoDB Setup
-
-1. Install MongoDB Community Edition
-2. Start the MongoDB service
-3. Use the connection string: `mongodb://localhost:27017/shipment-tracker`
-
-<hr>
-
-## 🐳 Docker Setup
-
-You can also run the application using Docker:
-
+### Building and Running
 ```bash
-# Build the Docker image
-docker build -t shipment-tracker-api .
+# Build and start the container (uses docker-compose.yml)
+docker-compose up -d --build
 
-# Run the container
-docker run -p 5000:5000 --env-file .env shipment-tracker-api
+# Alternative: Run the deploy script
+./docker-deploy.sh
 ```
 
-### Docker Compose
+### Monitoring and Management
+```bash
+# View running containers
+docker ps
 
-```yaml
-version: '3'
-services:
-  api:
-    build: .
-    ports:
-      - "5000:5000"
-    env_file: .env
-    depends_on:
-      - mongo
-  mongo:
-    image: mongo
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo-data:/data/db
+# View container logs
+docker-compose logs -f
 
-volumes:
-  mongo-data:
+# View logs for a specific service
+docker-compose logs -f api
+
+# Check container health
+curl http://localhost:5000/health
+
+# Inspect MongoDB data
+docker exec -it shipment-tracker-mongo mongosh
 ```
 
-<div align="center">
-  <p>Built with ❤️ by Your Name</p>
-</div> 
+### Stopping and Cleaning Up
+```bash
+# Stop containers
+docker-compose down
+
+# Stop containers and remove volumes
+docker-compose down -v
+
+# Remove all stopped containers, unused networks, images and volumes
+docker system prune -a --volumes
+```
+
+### Rebuilding After Changes
+```bash
+# Rebuild the application after code changes
+docker-compose up -d --build
+```
+
+## 🚢 Deployment
+
+### Render Deployment
+1. Connect your GitHub repository to Render
+2. Create a new Web Service
+3. Use `npm start` as the start command
+4. Add environment variables (NODE_ENV, PORT, MONGO_URI)
+
+## 📝 Assumptions
+
+- MongoDB Atlas is used as the database service, but local MongoDB can also be configured
+- Geospatial queries are supported by the MongoDB instance
+- Each shipment has a unique ID and container ID
+- The route is represented as an array of waypoints
+- ETA calculations are based on current location and route information
+- Authentication is handled separately or will be implemented in future versions
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. 
