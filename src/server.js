@@ -50,6 +50,13 @@ app.use((req, res, next) => {
 // Routes
 app.use('/api/shipments', checkDbAuth, shipmentRoutes);
 
+// Add redirect for /shipments to /api/shipments
+app.use('/shipments', (req, res) => {
+  // Redirect to the same path but with /api prefix
+  const redirectUrl = `/api${req.url}`;
+  res.redirect(307, redirectUrl);
+});
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
