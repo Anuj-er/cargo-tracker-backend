@@ -59,6 +59,17 @@ app.get('/health', (req, res) => {
   });
 });
 
+// Root route
+app.get('/', (req, res) => {
+  res.status(200).json({ 
+    message: 'Cargo Tracker API is running',
+    endpoints: {
+      health: '/health',
+      api: '/api/shipments'
+    }
+  });
+});
+
 // Handle undefined routes
 app.all('*', (req, res, next) => {
   next(new Error(`Can't find ${req.originalUrl} on this server!`));
