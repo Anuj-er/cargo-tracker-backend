@@ -69,7 +69,7 @@ app.get('/health', (req, res) => {
 // Root route
 app.get('/', (req, res) => {
   res.status(200).json({ 
-    message: 'Cargo Tracker API is running',
+    message: 'Shipment Tracker API is running',
     endpoints: {
       health: '/health',
       api: '/api/shipments'
