@@ -30,7 +30,7 @@
 
 ## 🔍 Overview
 
-This is the backend API for the Cargo Shipment Tracker application, built using Node.js, Express, and MongoDB. It provides a comprehensive set of endpoints for managing and tracking shipments, including creating new shipments, updating their locations, and calculating estimated arrival times.
+This is the backend API for the Shipment Tracker application, built using Node.js, Express, and MongoDB. It provides a comprehensive set of endpoints for managing and tracking shipments, including creating new shipments, updating their locations, and calculating estimated arrival times.
 
 The API is designed to be robust, scalable, and easy to integrate with the frontend application or other services.
 
@@ -40,7 +40,7 @@ The API is designed to be robust, scalable, and easy to integrate with the front
 
 <div align="center">
   <table>
-    <tr>
+    <tr>`
       <th>Method</th>
       <th>Endpoint</th>
       <th>Description</th>
